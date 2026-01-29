@@ -1,0 +1,115 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Menu from '../components/menu.astro';
+
+const menuItems ={
+    home: { href: '/inicio', label: 'Home'},
+};
+
+const slideVertical = {
+  forwards: {
+    old: [{ name: 'subir-y-salir', duration: '0.6s', easing: 'ease' }],
+    new: [{ name: 'subir-y-entrar', duration: '0.6s', easing: 'ease-in-out' }]
+  },
+  backwards: {
+    old: [{ name: 'bajar-y-salir', duration: '0.6s', easing: 'ease' }],
+    new: [{ name: 'bajar-y-entrar', duration: '0.6s', easing: 'ease-in-out' }]
+  }
+};
+---
+
+<Layout title="Santiago Claros | Inicio">
+    <div class="container" transition:name="inicio" transition:animate={slideVertical}>
+        <Menu menuItems={menuItems} />
+        <div class="contenedor-imagenes">
+            <figure>
+                <img src="/images/marcas.gif" alt="Imagen 1"/>
+                <figcaption>./MARCAS</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/shows.jpg" alt="Imagen 2"/>
+                <figcaption>./SHOWS</figcaption>
+            </figure>
+            <figure>
+                <img src="/images/videoclips.gif" alt="Imagen 3"/>
+                <figcaption>./VIDEOS</figcaption>
+            </figure>
+        </div>
+    </div>
+</Layout>
+
+<style>
+  /* Contenedor principal */
+  .container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  /* Grid de 3 columnas */
+  .contenedor-imagenes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8rem;
+    align-items: start; /* Alinea los items al principio */
+    width: 100%;       /* Asegura que sea responsivo */
+  }
+
+  /* Estilo base de cada tarjeta (figure) */
+  figure {
+    display: flex;
+    flex-direction: column; /* Texto abajo por defecto */
+    margin: 3%;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  figure:hover{
+    cursor:pointer;
+  }
+
+  /* La magia: Invertir el orden solo en la segunda imagen (la del centro) */
+  figure:nth-child(2) {
+    flex-direction: column-reverse; /* Texto arriba */
+  }
+
+/* AJUSTE DE IMAGEN */
+  img {
+    width: 100%;       /* Se adapta al ancho de la columna del grid */
+    object-fit: cover; /* Recorta la imagen para que llene el espacio sin deformarse */
+    transition: transform 0.3s ease;
+  }
+
+  /* Efecto opcional para dar vida */
+  img:hover {
+    transform: scale(1.02);
+  }
+
+  figcaption {
+    font-family: 'Source', monospace; /* Siguiendo tu estilo anterior */
+    font-size: 3rem;
+    color: #000; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    user-select: none;
+    transition: transform .2s ease-out;
+  }
+
+  figure:hover figcaption{
+   color: #4b5563;
+   transform: scale(1.2);
+  }
+
+  /* Responsive: 1 columna en móviles */
+  @media (max-width: 768px) {
+    .contenedor-imagenes {
+      grid-template-columns: 1fr;
+      gap: 4rem;
+    }
+    
+    figure:nth-child(2) {
+      flex-direction: column; /* Volvemos a la normalidad en móvil */
+    }
+  }
+</style>

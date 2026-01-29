@@ -1,0 +1,65 @@
+---
+interface MenuItem {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  menuItems: Record<string, MenuItem>;
+}
+
+const { menuItems } = Astro.props;
+---
+
+<nav>
+    <ul>
+        {Object.entries(menuItems).map(([, link], index) => (
+            <li>
+              <a data-astro-reload={link.href === "/sobre-mi" ? "" : null} href={link.href}>0{index +1}. {link.label}</a>
+            </li>
+          ))}
+    </ul>
+</nav>
+
+<style>
+
+    nav {
+        z-index:1;
+        grid-column:1;
+        margin-left:70px;
+        width:max-content;
+        animation-delay: 1s;
+        animation:EntradaRedes 2s;
+    }
+
+    ul {
+        padding: 0;
+        display:flex;
+        list-style: none;
+        flex-direction: column;
+    }
+
+    ul li{
+        user-select: none;
+        transition:all 0.5s ease;
+    }
+
+    ul li:hover{
+        transform: translateX(10px) scale(1.02);
+    }
+
+    a {
+        all:unset;
+        cursor:pointer;
+        color:#727272;
+        font-family: "Tasa";
+        transition:1s color;
+        text-decoration: none;
+        font-size: clamp(1.25rem, 1.1343rem + 0.6173vw, 1.875rem);
+    }
+
+    a:hover{
+        color:#000000;
+    }
+
+</style>
