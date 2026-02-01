@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Menu from '../components/menu.astro';
 
 const menuItems ={
-    home: { href: '/inicio', label: 'Home'},
+    home: { href: 'inicio', label: 'Home'},
 };
 
 const slideVertical = {
@@ -23,15 +23,15 @@ const slideVertical = {
         <Menu menuItems={menuItems} />
         <div class="contenedor-imagenes">
             <figure>
-                <img src={`${import.meta.env.BASE_URL}images/marcas.gif`} alt="" />
+                <img src={`${import.meta.env.BASE_URL}/images/marcas.gif`} alt="" />
                 <figcaption>./MARCAS</figcaption>
             </figure>
             <figure>
-                <img src={`${import.meta.env.BASE_URL}images/shows.jpg`} alt="" />
+                <img src={`${import.meta.env.BASE_URL}/images/shows.jpg`} alt="" />
                 <figcaption>./SHOWS</figcaption>
             </figure>
             <figure>
-                <img src={`${import.meta.env.BASE_URL}images/videoclips.gif`} alt="" />
+                <img src={`${import.meta.env.BASE_URL}/images/videoclips.gif`} alt="" />
                 <figcaption>./VIDEOS</figcaption>
             </figure>
         </div>

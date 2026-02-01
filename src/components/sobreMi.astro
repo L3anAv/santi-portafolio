@@ -1,9 +1,11 @@
 ---
 // SobreMi.astro
 const { foto, nombre, descripcion } = Astro.props;
+const rootPath = import.meta.env.BASE_URL;
+const aboutPath = `${rootPath}/sobre-mi`;
 ---
 
-<div id="about-overlay" class="overlay"></div>
+<div id="about-overlay" data-path={aboutPath} data-base={rootPath} class="overlay">
 
 <aside id="about-panel" class="panel">
   <button id="close-about" class="close-btn" aria-label="Cerrar">&times;</button>
@@ -15,14 +17,23 @@ const { foto, nombre, descripcion } = Astro.props;
     <p class="description">{descripcion}</p>
   </div>
 </aside>
+</div>
 
 <script>
   function initAbout() {
+    const dataContainer = document.getElementById('about-overlay');
+    if (!dataContainer) return;
+
+    const aboutPath = dataContainer.dataset.path.replace(/\/$/, '');
+    const rootPath = dataContainer.dataset.base;
+
     const panel = document.getElementById('about-panel');
-    const overlay = document.getElementById('about-overlay');
+    const overlay = dataContainer;
     const closeBtn = document.getElementById('close-about');
 
-    if (!panel || !overlay) return; // Seguridad para el build
+    if (!panel || !overlay) return;
+
+    const isAtAbout = () => window.location.pathname.replace(/\/$/, '') === aboutPath;
 
     const openPanel = () => {
       panel.classList.add('is-active');
@@ -34,35 +45,48 @@ const { foto, nombre, descripcion } = Astro.props;
       panel.classList.remove('is-active');
       overlay.classList.remove('is-active');
       document.body.style.overflow = '';
-      if (window.location.pathname === '/sobre-mi') {
-        window.history.pushState({}, '', '/');
+      
+      if (isAtAbout()) {
+        window.history.pushState({}, '', rootPath);
       }
     };
 
     const handleNavigation = (e) => {
       const link = e.target.closest('a');
-      if (link && link.getAttribute('href') === '/sobre-mi') {
-        e.preventDefault();
-        window.history.pushState({}, '', '/sobre-mi');
-        openPanel();
+      if (!link) return;
+
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      const normalizedHref = href.replace(/\/$/, '');
+
+      // Si es el link de sobre-mi
+      if (normalizedHref === aboutPath || href === '/sobre-mi') {
+        // --- AQUÍ EVITAMOS EL VIEW TRANSITION ---
+        e.preventDefault(); 
+        e.stopImmediatePropagation(); // Evita que Astro escuche este clic
+        
+        if (!panel.classList.contains('is-active')) {
+          window.history.pushState({}, '', aboutPath);
+          openPanel();
+        }
       }
     };
 
-    // Eventos de botones
+    // Limpiar y añadir eventos
     closeBtn?.addEventListener('click', closePanel);
-    overlay?.addEventListener('click', closePanel);
-    document.addEventListener('click', handleNavigation);
+    overlay.addEventListener('click', closePanel);
+    
+    // Importante: Usar capture true para adelantarnos a Astro
+    document.addEventListener('click', handleNavigation, { capture: true });
 
-    // Popstate para el botón atrás
-    window.addEventListener('popstate', () => {
-      window.location.pathname === '/sobre-mi' ? openPanel() : closePanel();
-    });
+    window.onpopstate = () => {
+      isAtAbout() ? openPanel() : closePanel();
+    };
 
-    // Check inicial
-    if (window.location.pathname === '/sobre-mi') openPanel();
+    if (isAtAbout()) openPanel();
   }
 
-  // Se ejecuta en la carga inicial y en cada transición de página
   document.addEventListener('astro:page-load', initAbout);
 </script>
 

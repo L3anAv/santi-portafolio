@@ -15,7 +15,7 @@ const { menuItems } = Astro.props;
     <ul>
         {Object.entries(menuItems).map(([, link], index) => (
             <li>
-              <a data-astro-reload={link.href === "/sobre-mi" ? "" : null} href={`${import.meta.env.BASE_URL}/${link.href}`}>0{index +1}. {link.label}</a>
+              <a data-astro-reload={link.href === "/sobre-mi" ? "" : null} href={link.label === 'Contacto' ? `${link.href}` : `${import.meta.env.BASE_URL}/${link.href}`}>0{index +1}. {link.label}</a>
             </li>
           ))}
     </ul>
